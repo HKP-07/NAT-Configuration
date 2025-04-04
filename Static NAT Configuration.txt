@@ -1,0 +1,186 @@
+Static NAT Configuration
+
+!! Router
+
+Router>en
+Router#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#in g0/0
+Router(config-if)#ip add 10.1.1.10 255.255.255.0
+Router(config-if)#no sh
+
+Router(config-if)#
+%LINK-5-CHANGED: Interface GigabitEthernet0/0, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0, changed state to up
+
+Router(config-if)#exit
+Router(config)#in g0/1
+Router(config-if)#ip add 100.1.1.10 255.255.255.0
+Router(config-if)#no sh
+
+Router(config-if)#
+%LINK-5-CHANGED: Interface GigabitEthernet0/1, changed state to up
+
+Router(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1, changed state to up
+
+
+
+
+
+
+
+
+
+Router con0 is now available
+
+
+
+
+
+
+Press RETURN to get started.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Router>en
+Router#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.12.2
+Router(config)#do sh ip rou
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       10.1.1.0/24 is directly connected, GigabitEthernet0/0
+L       10.1.1.10/32 is directly connected, GigabitEthernet0/0
+     100.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       100.1.1.0/24 is directly connected, GigabitEthernet0/1
+L       100.1.1.10/32 is directly connected, GigabitEthernet0/1
+
+Router(config)#do ping 200.1.1.200
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 200.1.1.200, timeout is 2 seconds:
+.....
+Success rate is 0 percent (0/5)
+
+Router(config)#ip route 0.0.0.0 0.0.0.0 100.1.1.100
+Router(config)#do sh ip ro
+Router(config)#do sh ip ro
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is 100.1.1.100 to network 0.0.0.0
+
+     10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       10.1.1.0/24 is directly connected, GigabitEthernet0/0
+L       10.1.1.10/32 is directly connected, GigabitEthernet0/0
+     100.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C       100.1.1.0/24 is directly connected, GigabitEthernet0/1
+L       100.1.1.10/32 is directly connected, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 100.1.1.100
+
+Router(config)#
+Router(config)#ping 200.1.1.200
+                ^
+% Invalid input detected at '^' marker.
+	
+Router(config)#do ping 200.1.1.200
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 200.1.1.200, timeout is 2 seconds:
+..!!!
+Success rate is 60 percent (3/5), round-trip min/avg/max = 0/0/1 ms
+
+Router(config)#in g0/0
+Router(config-if)#ip nat ?
+  inside   Inside interface for address translation
+  outside  Outside interface for address translation
+Router(config-if)#ip nat in ?
+  <cr>
+Router(config-if)#ip nat in 
+Router(config-if)#in g0/1
+Router(config-if)#ip nat out
+Router(config-if)#exit
+Router(config)#!! Static Nat Config
+Router(config)#ip nat inside ?
+  source  Source address translation
+Router(config)#ip nat inside source ?
+  list    Specify access list describing local addresses
+  static  Specify static local->global mapping
+Router(config)#ip nat inside source static ?
+  A.B.C.D  Inside local IP address
+  tcp      Transmission Control Protocol
+  udp      User Datagram Protocol
+Router(config)#ip nat inside source static 10.1.1.1 ?
+  A.B.C.D  Inside global IP address
+Router(config)#ip nat inside source static 10.1.1.1 100.1.1.50 ?
+  <cr>
+Router(config)#ip nat inside source static 10.1.1.1 100.1.1.50 
+Router(config)#ip nat inside source static 10.1.1.2 100.1.1.51 
+Router(config)#
+Router(config)#do sh ip run | sec nat
+sh ip run | sec nat
+       ^
+% Invalid input detected at '^' marker.
+	
+Router(config)#do sh ip run  sec nat
+sh ip run  sec nat
+       ^
+% Invalid input detected at '^' marker.
+	
+Router(config)#do sh ip run
+sh ip run
+       ^
+% Invalid input detected at '^' marker.
+	
+Router(config)#do sh run | sec nat
+ ip nat inside
+ ip nat outside
+ip nat inside source static 10.1.1.1 100.1.1.50 
+ip nat inside source static 10.1.1.2 100.1.1.51 
+Router(config)#
+Router(config)#do sh ip nat tra
+Pro  Inside global     Inside local       Outside local      Outside global
+---  100.1.1.50        10.1.1.1           ---                ---
+---  100.1.1.51        10.1.1.2           ---                ---
+
+Router(config)#
+Router(config)#do sh ip nat trans
+Pro  Inside global     Inside local       Outside local      Outside global
+icmp 100.1.1.50:13     10.1.1.1:13        200.1.1.200:13     200.1.1.200:13
+icmp 100.1.1.50:14     10.1.1.1:14        200.1.1.200:14     200.1.1.200:14
+icmp 100.1.1.50:15     10.1.1.1:15        200.1.1.200:15     200.1.1.200:15
+icmp 100.1.1.50:16     10.1.1.1:16        200.1.1.200:16     200.1.1.200:16
+icmp 100.1.1.51:5      10.1.1.2:5         200.1.1.200:5      200.1.1.200:5
+icmp 100.1.1.51:6      10.1.1.2:6         200.1.1.200:6      200.1.1.200:6
+icmp 100.1.1.51:7      10.1.1.2:7         200.1.1.200:7      200.1.1.200:7
+icmp 100.1.1.51:8      10.1.1.2:8         200.1.1.200:8      200.1.1.200:8
+---  100.1.1.50        10.1.1.1           ---                ---
+---  100.1.1.51        10.1.1.2           ---                ---
+
+Router(config)#
